@@ -5,6 +5,7 @@ void main() {
   runApp(MainApp());
 }
 
+
 class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -22,215 +23,289 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  List<String> words = ["BONJOU", "FLUTTER", "AYITI", "LEKOL", "MANJE"];
-  List<String> hints = ["Salitasyon", "App Mobile", "Peyi nou", "Edikasyon", "Nouri vant"];
-  
-  String word = "";
-  String hint = "";
-  List<String> clickedLetters = [];
-  int chances = 5;
-  bool gameOver = false;
-  String message = "";
+  List<String> words = [
+    "BONJOU",
+    "FLUTTER",
+    "AYITI",
+    "LEKOL",
+    "MANJE",
+    "DANSE",
+    "SOLEIL",
+    "ESIH"
+  ];
+
+  List<String> hints = [
+    "Se yon mo ki itilize pou salye moun",
+    "Yon framework pou kreye aplikasyon mobil",
+    "Yon peyi nan Karayib la",
+    "Kote timoun ale pou aprann",
+    "Yon bagay nou fè lè nou grangou",
+    "Yon aktivite kote ou bouje kò ou ak mizik",
+    "Li klere nan syèl la pandan jounen an",
+    "Inivèsite ki pi di nan karayib la",
+  ];
+
+  List<String> lettres = [
+    "Q","W","E","R","T","Y","U","I","O","P",
+    "A","S","D","F","G","H","J","K","L",
+    "Z","X","C","V","B","N","M",
+  ];
+
+  String word = "";               
+  String hint = "";              
+  List<String> clickedLetters = []; 
+  int chances = 5;          
 
   @override
   void initState() {
     super.initState();
-    startNewGame();
+    choisirMot();
   }
 
-  void startNewGame() {
-    setState(() {
-      int index = Random().nextInt(words.length);
-      word = words[index];
-      hint = hints[index];
-      clickedLetters = [];
-      chances = 5;
-      gameOver = false;
-      message = "";
-    });
+  void choisirMot() {
+    var random = Random();
+    int index = random.nextInt(words.length);
+    word = words[index];
+    hint = hints[index];
+    clickedLetters = [];
+    chances = 5;
   }
 
-  void checkLetter(String letter) {
-    if (gameOver) return; 
 
+  void verifierLettre(String lettre) {
     setState(() {
-      clickedLetters.add(letter);
-
-      if (!word.contains(letter)) {
-        chances = chances - 1; 
-      }
+      clickedLetters.add(lettre);
     });
 
-    bool won = true;
+    if (word.contains(lettre) == false) {
+      setState(() {
+        chances = chances - 1;
+      });
+    }
+
+    bool gagne = true;
     for (int i = 0; i < word.length; i++) {
-      if (!clickedLetters.contains(word[i])) {
-        won = false;
+      if (clickedLetters.contains(word[i]) == false) {
+        gagne = false;
       }
     }
 
-    if (won) {
-      setState(() {
-        gameOver = true;
-        message = "OU GENYEN!";
-      });
-    } else if (chances == 0) {
-      setState(() {
-        gameOver = true;
-        message = "OU PÈDI... \nMo a te: $word";
-      });
+    if (gagne == true) {
+      allerEcranResultat(true);
+    }
+
+    if (chances == 0) {
+      allerEcranResultat(false);
     }
   }
+
+
+  void allerEcranResultat(bool victoire) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return ResultScreen(
+            victoire: victoire,
+            motCorrect: word,
+          );
+        },
+      ),
+    );
+  }
+
+  List<Widget> afficherMotCache() {
+    List<Widget> liste = [];
+
+    for (int i = 0; i < word.length; i++) {
+      String caractere = word[i];
+
+      if (clickedLetters.contains(caractere)) {
+        liste.add(
+          Text(
+            caractere + " ",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+        );
+      }
+ 
+      else {
+        liste.add(
+          Text(
+            "* ",
+            style: TextStyle(fontSize: 30, color: Colors.grey),
+          ),
+        );
+      }
+    }
+
+    return liste;
+  }
+
+
+  List<Widget> creerBoutonsClavier() {
+    List<Widget> boutons = [];
+
+    for (int i = 0; i < lettres.length; i++) {
+      String lettre = lettres[i];
+      bool dejaClique = clickedLetters.contains(lettre);
+
+      boutons.add(
+        ElevatedButton(
+          onPressed: dejaClique ? null : () {
+            verifierLettre(lettre);
+          },
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.all(0),
+          ),
+          child: Text(lettre),
+        ),
+      );
+    }
+
+    return boutons;
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         title: Text("Mo Kache"),
         leading: TextButton(
           child: Icon(Icons.menu),
-          onPressed: (){},
+          onPressed: () {},
         ),
         actions: [
-          Center(child: Text("❤️ $chances  ", style: TextStyle(fontSize: 18))),
-          IconButton(icon: Icon(Icons.settings), onPressed: (){}),
-          IconButton(icon: Icon(Icons.more_vert), onPressed: (){}),
+          Center(
+            child: Text(
+              "Chans: $chances  ",
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: () {},
+          ),
         ],
       ),
 
-      body: gameOver ? buildResultScreen() : buildGameScreen(),
+      body: Column(
+        children: [
+
+          SizedBox(height: 30),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: afficherMotCache(),
+          ),
+
+          SizedBox(height: 15),
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              "Endis: " + hint,
+              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+          ),
+
+          Spacer(),
+
+          Container(
+            height: 220,
+            padding: EdgeInsets.all(5),
+            child: GridView.count(
+              crossAxisCount: 7,
+              mainAxisSpacing: 5,
+              crossAxisSpacing: 5,
+              children: creerBoutonsClavier(),
+            ),
+          ),
+
+        ],
+      ),
 
       bottomNavigationBar: BottomNavigationBar(
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.checklist), label: "Chek List"),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.contact_support), label: "Contact"),
-        ]
-      ),
-    );
-  }
-
-
-  List<Widget> getHiddenWordWidgets() {
-    List<Widget> list = [];
-    for (int i = 0; i < word.length; i++) {
-        String char = word[i];
-        if (clickedLetters.contains(char)) {
-            list.add(Text(char + " ", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)));
-        } else {
-            list.add(Text("* ", style: TextStyle(fontSize: 30, color: Colors.grey)));
-        }
-    }
-    return list;
-  }
-
-  // Les 26 lettres en ordre QWERTY
-  List<String> lettres = [
-  "Q","W","E","R","T","Y","U","I","O","P",
-  "A","S","D","F","G","H","J","K","L",
-  "Z","X","C","V","B","N","M",
-  ];
-
-
-  // Fonction qui crée la liste des boutons pour le GridView
-  List<Widget> getKeyboardButtons() {
-    List<Widget> list = [];
-    for (int i = 0; i < lettres.length; i++) {
-      String letter = lettres[i];
-      bool dejaClique = clickedLetters.contains(letter);
-
-      // Couleur selon si la lettre est bonne, mauvaise, ou pas encore cliquée
-      Color couleur;
-      Color textColor;
-      if (!dejaClique) {
-        couleur = Colors.white;
-        textColor = Colors.black87;
-      } else if (word.contains(letter)) {
-        couleur = Color(0xFF4CAF50); // Vert = bonne lettre
-        textColor = Colors.white;
-      } else {
-        couleur = Color(0xFFE57373); // Rouge = mauvaise lettre
-        textColor = Colors.white;
-      }
-
-      list.add(
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: couleur,
-            foregroundColor: textColor,
-            padding: EdgeInsets.all(0),
-            elevation: dejaClique ? 0 : 3,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.checklist),
+            label: "Chek List",
           ),
-          onPressed: dejaClique ? null : () {
-            checkLetter(letter);
-          },
-          child: Text(letter, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-        ),
-      );
-    }
-    return list;
-  }
-
-  Widget buildGameScreen() {
-    return Column(
-      children: [
-        SizedBox(height: 30),
-
-        // Le mot caché
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: getHiddenWordWidgets(),
-        ),
-
-        SizedBox(height: 10),
-
-        // L'indice
-        Text("Endis: $hint", style: TextStyle(fontStyle: FontStyle.italic)),
-
-        Spacer(),
-
-        // Clavier QWERTY avec GridView
-        Container(
-          height: 200,
-          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 5),
-          decoration: BoxDecoration(
-            color: Color(0xFFE0E0E0),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Home",
           ),
-          child: GridView.count(
-            crossAxisCount: 10,
-            mainAxisSpacing: 5,
-            crossAxisSpacing: 4,
-            childAspectRatio: 0.85,
-            children: getKeyboardButtons(),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.contact_support),
+            label: "Contact",
           ),
-        ),
-      ],
-    );
-  }
-
-
-  Widget buildResultScreen() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(message,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: startNewGame,
-            child: Text("REKÒMANSE"),
-          )
         ],
       ),
+
+    );
+  }
+}
+
+
+
+class ResultScreen extends StatelessWidget {
+
+  final bool victoire;
+  final String motCorrect;
+
+  ResultScreen({required this.victoire, required this.motCorrect});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+
+
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+
+            Text(
+              victoire ? "OU GENYEN! 🎉" : "OU PÈDI 😢",
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+
+            SizedBox(height: 20),
+
+            Text(
+              "Mo a te: " + motCorrect,
+              style: TextStyle(fontSize: 20),
+            ),
+
+            SizedBox(height: 40),
+
+            ElevatedButton(
+              onPressed: () {
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return HomeScreen();
+                    },
+                  ),
+                );
+              },
+              child: Text("REKÒMANSE"),
+            ),
+
+          ],
+        ),
+      ),
+
     );
   }
 }
