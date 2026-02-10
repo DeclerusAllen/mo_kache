@@ -86,13 +86,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Mo Kache"),
-        backgroundColor: Colors.blue,
         leading: TextButton(
-          child: Icon(Icons.menu, color: Colors.white),
+          child: Icon(Icons.menu),
           onPressed: (){},
         ),
         actions: [
-          Center(child: Text("$chances  ", style: TextStyle(fontSize: 18))),
+          Center(child: Text("❤️ $chances  ", style: TextStyle(fontSize: 18))),
           IconButton(icon: Icon(Icons.settings), onPressed: (){}),
           IconButton(icon: Icon(Icons.more_vert), onPressed: (){}),
         ],
@@ -124,56 +123,92 @@ class _HomeScreenState extends State<HomeScreen> {
     return list;
   }
 
+  // Les 26 lettres en ordre QWERTY
+  List<String> lettres = [
+  "Q","W","E","R","T","Y","U","I","O","P",
+  "A","S","D","F","G","H","J","K","L",
+  "Z","X","C","V","B","N","M",
+  ];
+
+
+  // Fonction qui crée la liste des boutons pour le GridView
   List<Widget> getKeyboardButtons() {
     List<Widget> list = [];
-    String alphabet = "QWERTYUIOPASDFGHJKLZXCVBNM";
+    for (int i = 0; i < lettres.length; i++) {
+      String letter = lettres[i];
+      bool dejaClique = clickedLetters.contains(letter);
 
-    for (int i = 0; i < alphabet.length; i++) {
-        String letter = alphabet[i];
-        list.add(
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                   backgroundColor: Colors.blueAccent, 
-                   foregroundColor: Colors.white,
-                   padding: EdgeInsets.zero
-                ),
-                // Si la lettre est cliquée, on désactive le bouton (null)
-                onPressed: clickedLetters.contains(letter) ? null : () {
-                    checkLetter(letter);
-                },
-                child: Text(letter),
-            )
-        );
+      // Couleur selon si la lettre est bonne, mauvaise, ou pas encore cliquée
+      Color couleur;
+      Color textColor;
+      if (!dejaClique) {
+        couleur = Colors.white;
+        textColor = Colors.black87;
+      } else if (word.contains(letter)) {
+        couleur = Color(0xFF4CAF50); // Vert = bonne lettre
+        textColor = Colors.white;
+      } else {
+        couleur = Color(0xFFE57373); // Rouge = mauvaise lettre
+        textColor = Colors.white;
+      }
+
+      list.add(
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: couleur,
+            foregroundColor: textColor,
+            padding: EdgeInsets.all(0),
+            elevation: dejaClique ? 0 : 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          onPressed: dejaClique ? null : () {
+            checkLetter(letter);
+          },
+          child: Text(letter, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+        ),
+      );
     }
     return list;
   }
 
   Widget buildGameScreen() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(height: 20),
-        
-        Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        SizedBox(height: 30),
 
-            children: getHiddenWordWidgets(),
+        // Le mot caché
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: getHiddenWordWidgets(),
         ),
 
         SizedBox(height: 10),
+
+        // L'indice
         Text("Endis: $hint", style: TextStyle(fontStyle: FontStyle.italic)),
 
-        Spacer(), 
+        Spacer(),
 
+        // Clavier QWERTY avec GridView
         Container(
-            height: 400, 
-            padding: EdgeInsets.all(10),
-            child: GridView.count(
-                crossAxisCount: 7, 
-                mainAxisSpacing: 5,
-                crossAxisSpacing: 5,
-                children: getKeyboardButtons(),
+          height: 200,
+          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 5),
+          decoration: BoxDecoration(
+            color: Color(0xFFE0E0E0),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
             ),
+          ),
+          child: GridView.count(
+            crossAxisCount: 10,
+            mainAxisSpacing: 5,
+            crossAxisSpacing: 4,
+            childAspectRatio: 0.85,
+            children: getKeyboardButtons(),
+          ),
         ),
       ],
     );
@@ -185,8 +220,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(message, 
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold), 
+          Text(message,
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center
           ),
           SizedBox(height: 20),
