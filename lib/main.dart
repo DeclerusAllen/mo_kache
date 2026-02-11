@@ -143,11 +143,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-  List<Widget> creerBoutonsClavier() {
+  // Ligne 1 du clavier : Q W E R T Y U I O P
+  List<String> ligne1 = ["Q","W","E","R","T","Y","U","I","O","P"];
+  // Ligne 2 du clavier : A S D F G H J K L
+  List<String> ligne2 = ["A","S","D","F","G","H","J","K","L"];
+  // Ligne 3 du clavier : Z X C V B N M
+  List<String> ligne3 = ["Z","X","C","V","B","N","M"];
+
+  // Fonction pour créer les boutons d'une ligne
+  List<Widget> creerBoutonsLigne(List<String> lettresLigne) {
     List<Widget> boutons = [];
 
-    for (int i = 0; i < lettres.length; i++) {
-      String lettre = lettres[i];
+    for (int i = 0; i < lettresLigne.length; i++) {
+      String lettre = lettresLigne[i];
       bool dejaClique = clickedLetters.contains(lettre);
 
       boutons.add(
@@ -222,16 +230,50 @@ class _HomeScreenState extends State<HomeScreen> {
 
           Spacer(),
 
-          Container(
-            height: 220,
-            padding: EdgeInsets.all(5),
-            child: GridView.count(
-              crossAxisCount: 7,
-              mainAxisSpacing: 5,
-              crossAxisSpacing: 5,
-              children: creerBoutonsClavier(),
+          // Clavier QWERTY forme trapèze (comme Android)
+          // Ligne 1 : 10 touches (la plus large)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 2),
+            child: Container(
+              height: 50,
+              child: GridView.count(
+                crossAxisCount: 10,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
+                children: creerBoutonsLigne(ligne1),
+              ),
             ),
           ),
+
+          // Ligne 2 : 9 touches (un peu plus étroite)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 18),
+            child: Container(
+              height: 50,
+              child: GridView.count(
+                crossAxisCount: 9,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
+                children: creerBoutonsLigne(ligne2),
+              ),
+            ),
+          ),
+
+          // Ligne 3 : 7 touches (la plus étroite)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 45),
+            child: Container(
+              height: 50,
+              child: GridView.count(
+                crossAxisCount: 7,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
+                children: creerBoutonsLigne(ligne3),
+              ),
+            ),
+          ),
+
+          SizedBox(height: 10),
 
         ],
       ),
