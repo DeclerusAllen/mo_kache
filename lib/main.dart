@@ -152,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> ligne3 = ["Z","X","C","V","B","N","M"];
 
 
-  List<Widget> creerBoutonsLigne(List<String> lettresLigne) {
+  List<Widget> creerBoutonsL(List<String> lettresLigne) {
     List<Widget> boutons = [];
 
     for (int i = 0; i < lettresLigne.length; i++) {
@@ -240,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisCount: 10,
                 mainAxisSpacing: 4,
                 crossAxisSpacing: 4,
-                children: creerBoutonsLigne(ligne1),
+                children: creerBoutonsL(ligne1),
               ),
             ),
           ),
@@ -253,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisCount: 9,
                 mainAxisSpacing: 4,
                 crossAxisSpacing: 4,
-                children: creerBoutonsLigne(ligne2),
+                children: creerBoutonsL(ligne2),
               ),
             ),
           ),
@@ -266,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisCount: 7,
                 mainAxisSpacing: 4,
                 crossAxisSpacing: 4,
-                children: creerBoutonsLigne(ligne3),
+                children: creerBoutonsL(ligne3),
               ),
             ),
           ),
