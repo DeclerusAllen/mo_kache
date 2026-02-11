@@ -5,7 +5,6 @@ void main() {
   runApp(MainApp());
 }
 
-
 class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -73,7 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
     chances = 5;
   }
 
-
   void verifierLettre(String lettre) {
     setState(() {
       clickedLetters.add(lettre);
@@ -100,7 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
       allerEcranResultat(false);
     }
   }
-
 
   void allerEcranResultat(bool victoire) {
     Navigator.pushReplacement(
@@ -144,13 +141,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return liste;
   }
 
-
   List<String> ligne1 = ["Q","W","E","R","T","Y","U","I","O","P"];
   
   List<String> ligne2 = ["A","S","D","F","G","H","J","K","L"];
  
   List<String> ligne3 = ["Z","X","C","V","B","N","M"];
-
 
   List<Widget> creerBoutonsL(List<String> lettresLigne) {
     List<Widget> boutons = [];
@@ -174,7 +169,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return boutons;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -281,8 +275,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-
-
 class ResultScreen extends StatelessWidget {
 
   final bool victoire;
@@ -293,7 +285,6 @@ class ResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
 
       body: Center(
         child: Column(
