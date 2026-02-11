@@ -143,14 +143,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-  // Ligne 1 du clavier : Q W E R T Y U I O P
   List<String> ligne1 = ["Q","W","E","R","T","Y","U","I","O","P"];
-  // Ligne 2 du clavier : A S D F G H J K L
+  
   List<String> ligne2 = ["A","S","D","F","G","H","J","K","L"];
-  // Ligne 3 du clavier : Z X C V B N M
+ 
   List<String> ligne3 = ["Z","X","C","V","B","N","M"];
 
-  // Fonction pour créer les boutons d'une ligne
+
   List<Widget> creerBoutonsLigne(List<String> lettresLigne) {
     List<Widget> boutons = [];
 
@@ -207,7 +206,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      body: Column(
+      body: SafeArea(
+        child: Column(
         children: [
 
           SizedBox(height: 30),
@@ -230,12 +230,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
           Spacer(),
 
-          // Clavier QWERTY forme trapèze (comme Android)
-          // Ligne 1 : 10 touches (la plus large)
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 2),
             child: Container(
-              height: 50,
+              height: MediaQuery.of(context).size.width / 10,
               child: GridView.count(
                 crossAxisCount: 10,
                 mainAxisSpacing: 4,
@@ -249,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 18),
             child: Container(
-              height: 50,
+              height: MediaQuery.of(context).size.width / 10,
               child: GridView.count(
                 crossAxisCount: 9,
                 mainAxisSpacing: 4,
@@ -259,11 +257,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // Ligne 3 : 7 touches (la plus étroite)
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 45),
             child: Container(
-              height: 50,
+              height: MediaQuery.of(context).size.width / 10,
               child: GridView.count(
                 crossAxisCount: 7,
                 mainAxisSpacing: 4,
@@ -273,26 +270,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          SizedBox(height: 10),
+          SizedBox(height: 20),
 
         ],
-      ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.checklist),
-            label: "Chek List",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.contact_support),
-            label: "Contact",
-          ),
-        ],
+        ),
       ),
 
     );
@@ -341,19 +322,34 @@ class ResultScreen extends StatelessWidget {
 
             SizedBox(height: 40),
 
-            ElevatedButton(
-              onPressed: () {
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
 
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return HomeScreen();
-                    },
-                  ),
-                );
-              },
-              child: Text("REKÒMANSE"),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return HomeScreen();
+                        },
+                      ),
+                    );
+                  },
+                  child: Text("REJWE"),
+                ),
+
+                SizedBox(width: 20),
+
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("KITE"),
+                ),
+
+              ],
             ),
 
           ],
