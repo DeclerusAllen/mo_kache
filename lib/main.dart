@@ -245,7 +245,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // Ligne 2 : 9 touches (un peu plus étroite)
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 18),
             child: Container(
