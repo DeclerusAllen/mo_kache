@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
     "DANSE",
     "SOLEIL",
     "ESIH"
+    "Crusaders"
   ];
 
   List<String> hints = [
@@ -43,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     "Yon aktivite kote ou bouje kò ou ak mizik",
     "Li klere nan syèl la pandan jounen an",
     "Inivèsite ki pi di nan karayib la",
+    "Premye"
   ];
 
   List<String> lettres = [
