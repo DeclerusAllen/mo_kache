@@ -178,11 +178,15 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {},
         ),
         actions: [
-          Center(
-            child: Text(
-              "Chans: $chances  ",
-              style: TextStyle(fontSize: 16),
-            ),
+          Row(
+            children: [
+              Icon(Icons.favorite, color: Colors.red),
+              SizedBox(width: 4),
+              Text(
+                "$chances  ",
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
           ),
           IconButton(
             icon: Icon(Icons.settings),
@@ -271,6 +275,14 @@ class ResultScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
+            Icon(
+              victoire ? Icons.emoji_events : Icons.sentiment_dissatisfied,
+              size: 80,
+              color: victoire ? Colors.green : Colors.red,
+            ),
+
+            SizedBox(height: 20),
 
             Text(
               victoire ? "OU GENYEN! " : "OU PÈDI ",
